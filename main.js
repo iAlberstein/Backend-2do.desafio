@@ -11,7 +11,7 @@ class ProducManager {
     //Método para agregar nuevos productos:
     addProduct(title, description, price, image, code, stock){
 
-        //Verifico que el codigo de producto exista anteriormente.
+        //Verifico que el codigo de producto no exista anteriormente antes de generar uno nuevo. 
         for(let i = 0; i < this.products.length; i++){
             if (this.products[i].code === code){
                 console.log(`El código ${code} ya existe, no se generó un nuevo producto`)
