@@ -1,25 +1,27 @@
 class ProducManager {
-    //inicializo un array vacío:
+    // Inicializo un array vacío:
     constructor(){
         this.products = []
     }
 
-    //Utilizo la propiedad static para asignarle un id unico a cada producto que se incorpore:
+    // Utilizo la propiedad static para asignarle un id único a cada producto que se incorpore:
     static id = 0
 
-
-    //Método para agregar nuevos productos:
+    // Método para agregar nuevos productos:
     addProduct(title, description, price, image, code, stock){
+        // Verificar que todos los campos estén definidos y no estén vacíos
+        if (!title || !description || !price || !image || !code || !stock) {
+            console.log("Todos los campos son obligatorios.");
+            return;
+        }
 
-        //Verifico que el codigo de producto no exista anteriormente antes de generar uno nuevo. 
-        for(let i = 0; i < this.products.length; i++){
-            if (this.products[i].code === code){
-                console.log(`El código ${code} ya existe, no se generó un nuevo producto`)
-                return
-            }
-        }    
+        // Verifico que el código del producto no exista anteriormente antes de generar uno nuevo.
+        if (this.products.some(producto => producto.code === code)){
+            console.log(`El código ${code} ya existe, no se generó un nuevo producto`)
+            return;
+        }
 
-        //Creo un objeto con los value del producto. 
+        // Creo un objeto con los valores del producto.
         const newProduct = {
             title,
             description,
@@ -27,37 +29,31 @@ class ProducManager {
             image,
             code,
             stock,
-        }
+            id: ++ProducManager.id
+        };
 
-        //Verifico que los value ingresados en un nuevo producto no sean undefined o estén vacios antes de crear un nuevo producto.
-        if(Object.values(newProduct).every(value => value !== undefined && value !== '')) {
-            ProducManager.id++;
-            this.products.push({
-                ...newProduct, 
-                id: ProducManager.id
-            });
-        } else {
-            console.log("Se dejó un campo sin definir o vacío. Todos son requisitos obligatorios.");
-        }      
+        // Añadir el producto si todos los campos están definidos y no están vacíos.
+        this.products.push(newProduct);
     }
 
-    //Método para obtener todos los productos del array.
+    // Método para obtener todos los productos del array.
     getProduct(){
         return this.products;
     }
 
-    //Método para verificar si existe un ID determinado de producto.
-    existe(id) {
-        return this.products.find((producto) => producto.id === id);
-    }
-
-    //Método para encontrar un ID dentro del array y poder visualizarlo.
+    // Método para encontrar un ID dentro del array y poder visualizarlo.
     getProductById(id){
-        !this.existe(id) ? console.log("Not found") : console.log(this.existe(id)); 
+        const product = this.products.find(producto => producto.id === id);
+        if (!product) {
+            console.log("Not found");
+        } else {
+            console.log(product);
+        }
     }
 }
 
 const productos = new ProducManager();
+
 
 
 //TESTING
