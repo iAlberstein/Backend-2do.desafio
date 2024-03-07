@@ -35,7 +35,6 @@ class ProducManager {
             id: ++ProducManager.id
         };
 
-        // Añadir el producto si todos los campos están definidos y no están vacíos.
         this.products.push(newProduct);
         fs.writeFileSync(this.path, JSON.stringify(this.products))
     }
@@ -56,6 +55,35 @@ class ProducManager {
             console.log(product);
         }
     }
+
+    // Método para actualizar el value de un producto
+    updateProduct(id, updatedFields){
+        let products = JSON.parse(fs.readFileSync(this.path, 'utf-8'));
+        let index = products.findIndex(producto => producto.id === id);
+        if(index === -1) {
+            console.log("Producto inexistente");
+            return;
+        }
+        let updatedProduct = {...products[index], ...updatedFields};
+        products[index] = updatedProduct;
+        fs.writeFileSync(this.path, JSON.stringify(products));
+        console.log("Producto actualizado correctamente");
+    }
+
+    // Método para eliminar un producto
+    deleteProduct(id) {
+        let products = JSON.parse(fs.readFileSync(this.path, 'utf-8'));
+        let index = products.findIndex(producto => producto.id === id);
+        if(index === -1) {
+            console.log("Producto inexistente");
+            return;
+        }
+        products.splice(index, 1); 
+        fs.writeFileSync(this.path, JSON.stringify(products)); 
+        console.log("Producto eliminado correctamente");
+    }
+    
+    
 }
 
 const productos = new ProducManager();
@@ -63,10 +91,6 @@ const productos = new ProducManager();
 
 
 //TESTING
-
-//Primera llamada = arreglo vacio
-console.log(productos.getProduct());
-console.log("--------fin primera llamada--------")
 
 //Se agrega el primer producto
 productos.addProduct('titulo1', 'descripcion 1', 1000, 'imagen 1', 'p001', 1);
@@ -105,4 +129,8 @@ console.log("--------fin sexta llamada--------")
 
 // Búsqueda de producto por ID (reemplazar el valor de búsqueda por el producto deseado. En caso de no existir, retorna producto inexistente)
 productos.getProductById(1)
+
+productos.updateProduct(1, { title: "Nuevo titulo modificado" });
+
+productos.deleteProduct(1)
 
