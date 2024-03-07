@@ -1,7 +1,10 @@
+const fs = require('fs')
+
 class ProducManager {
     // Inicializo un array vacío:
     constructor(){
         this.products = []
+        this.path = "./productos.txt"
     }
 
     // Utilizo la propiedad static para asignarle un id único a cada producto que se incorpore:
@@ -34,16 +37,19 @@ class ProducManager {
 
         // Añadir el producto si todos los campos están definidos y no están vacíos.
         this.products.push(newProduct);
+        fs.writeFileSync(this.path, JSON.stringify(this.products))
     }
 
     // Método para obtener todos los productos del array.
     getProduct(){
-        return this.products;
+        let contenido = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
+        return contenido
+        
     }
 
     // Método para encontrar un ID dentro del array y poder visualizarlo.
     getProductById(id){
-        const product = this.products.find(producto => producto.id === id);
+        let product = JSON.parse(fs.readFileSync(this.path, 'utf-8')).find(producto => producto.id === id);
         if (!product) {
             console.log("Not found");
         } else {
@@ -99,3 +105,4 @@ console.log("--------fin sexta llamada--------")
 
 // Búsqueda de producto por ID (reemplazar el valor de búsqueda por el producto deseado. En caso de no existir, retorna producto inexistente)
 productos.getProductById(1)
+
